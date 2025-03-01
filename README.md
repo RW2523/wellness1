@@ -1,1 +1,4 @@
 # 520-project-repository
+The Health Management System (HMS) is a digital healthcare application inspired by Apple Health, designed to streamline health monitoring and medical record management. The primary objective of the system is to provide users with a centralized platform to track their health metrics, access electronic health records (EHR), receive AI-driven health recommendations, and communicate with healthcare professionals. The target audience includes individuals managing their health, doctors, and healthcare providers seeking to optimize patient care.
+
+The HMS aims to eliminate the inefficiencies of manual health recordkeeping by offering real-time access to medical data, ensuring secure communication between patients and healthcare professionals, and leveraging AI to provide personalized health insights. Additionally, the integration of telehealth features will enable remote consultations, improving accessibility to healthcare services.
