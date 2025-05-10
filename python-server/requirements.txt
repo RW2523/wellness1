@@ -1,0 +1,8 @@
+flask==2.0.2
+werkzeug==2.0.2
+markupsafe==2.0.1
+cors
+joblib
+scikit-learn
+pandas
+numpy
