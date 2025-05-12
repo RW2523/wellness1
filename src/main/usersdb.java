@@ -8,7 +8,7 @@ public class usersdb implements database_handling
 //create user with those credentials and give read and update access to health database
 //credentials table schema ->username primary key not null, email not null, password not null
 
-
+    //still todo to set up user and refactor to use new user name/password
     public boolean create_user(user user)
     {
         Connection connection = null;
