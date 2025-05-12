@@ -32,16 +32,6 @@
             "request": "launch",
             "mainClass": "check",
             "projectName": "520-project-repository_44b107c6"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-Project520Application<project520>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com._0.project.project520.Project520Application",
-            "projectName": "project520",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
