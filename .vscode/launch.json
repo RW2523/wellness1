@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "check",
+            "request": "launch",
+            "mainClass": "check"
+        },
+        {
             "name": "Attach",
             "port": 9229,
             "request": "attach",
