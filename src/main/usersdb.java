@@ -9,9 +9,44 @@ public class usersdb implements database_handling
 //credentials table schema ->username primary key not null, email not null, password not null
 
 
-
+    public boolean create_user(user user)
+    {
+        Connection connection = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/user_info",
+                "test", "test");
+                //db is user infor->stores credentials and health info
+    
+            //create statement
+            String insertstatement="INSERT INTO credentials VALUES (?, ?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            //insert values to be entered
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            ResultSet resultSet;
+            
+            preparedStatement.close();
+            connection.close();
+             if (rowsAffected>0)
+            {
+                return true;
+            
+            }
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        } //access database with credentials
+        //insert list information as row
+        //return true if successful
+        return false;
+    
+    }
     @Override
-    public Boolean insert_into_db(List<String> dbinfo)
+    public  Boolean insert_into_db(user user)
     {
        Connection connection = null;
         try {
@@ -26,13 +61,12 @@ public class usersdb implements database_handling
             String insertstatement="INSERT INTO credentials VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
-            preparedStatement.setString(1,dbinfo.get(0));
-            preparedStatement.setString(2,dbinfo.get(1));
-            preparedStatement.setString(3,dbinfo.get(2));
-            preparedStatement.setString(4,dbinfo.get(3));
+            preparedStatement.setString(1,user.getusername());
+            preparedStatement.setString(2,user.getpass());
+            preparedStatement.setString(3,user.getemail());
+            preparedStatement.setString(4,user.getrole());
             int rowsAffected = preparedStatement.executeUpdate();
             
-            ResultSet resultSet;
             
             preparedStatement.close();
             connection.close();
@@ -73,13 +107,20 @@ public class usersdb implements database_handling
             preparedStatement.setString(1,user);
            
             ResultSet resultSet = preparedStatement.executeQuery();
+            // ... process the data
+
              while (resultSet.next()) 
              {
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
                 String email = resultSet.getString("email");
                 String role = resultSet.getString("role");
-        // ... process the data
+                userinfo.add(username);
+                userinfo.add(password);
+                userinfo.add(email);
+                userinfo.add(role);
+
+
             }
             resultSet.close();
             preparedStatement.close();
@@ -96,10 +137,8 @@ public class usersdb implements database_handling
 
         
     }
-    public static void main()
-    {
-        
-    }
+
+
 
 
     
