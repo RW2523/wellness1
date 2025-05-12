@@ -87,11 +87,12 @@ public class usersdb implements database_handling
     }
   
     @Override
-    public List retrieve_from_db(String user) 
+    public user retrieve_from_db(String user) 
     {
         Connection connection = null;
-        List<String>userinfo=new ArrayList<>();
-
+        //List<String>userinfo=new ArrayList<>();
+       
+        user currentuser=null;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -111,14 +112,13 @@ public class usersdb implements database_handling
 
              while (resultSet.next()) 
              {
+                //get userinfor from database
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
                 String email = resultSet.getString("email");
                 String role = resultSet.getString("role");
-                userinfo.add(username);
-                userinfo.add(password);
-                userinfo.add(email);
-                userinfo.add(role);
+                //set user info
+                currentuser=new user(username, password, email,role);
 
 
             }
@@ -133,7 +133,8 @@ public class usersdb implements database_handling
         } //access database with credentials
         //insert list information as row
         //return true if successful
-        return userinfo;
+        //return the current user
+        return currentuser;
 
         
     }

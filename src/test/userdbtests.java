@@ -35,12 +35,12 @@ public class userdbtests
     {
         user user=new user("user", "pass", "email", "role");
         usersdb test=new usersdb();
-        List<String> output=test.retrieve_from_db(user.getusername());
+        user retreieveduser=test.retrieve_from_db(user.getusername());
         
-        assertEquals(user.getusername(),output.get(0));
-        assertEquals(user.getpass(),output.get(1));
-        assertEquals(user.getemail(),output.get(2));
-        assertEquals(user.getrole(),output.get(3));
+        assertEquals(user.getusername(),retreieveduser.getusername());
+        assertEquals(user.getpass(),retreieveduser.getpass());
+        assertEquals(user.getemail(),retreieveduser.getemail());
+        assertEquals(user.getrole(),retreieveduser.getrole());
     }
     
 }
