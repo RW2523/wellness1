@@ -5,4 +5,7 @@ cors
 joblib
 scikit-learn
 pandas
-numpy
+numpy<2.0
+torch==2.1.2
+transformers==4.39.3
+Pillow==10.3.0

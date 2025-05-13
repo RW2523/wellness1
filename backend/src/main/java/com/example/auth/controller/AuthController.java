@@ -1,19 +1,26 @@
 package com.example.auth.controller;
 
+import com.example.auth.model.MealLog;
 import com.example.auth.model.User;
+import com.example.auth.repository.MealLogRepository;
 import com.example.auth.service.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.boot.SpringApplication;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.example.auth.model.MealLog;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,6 +29,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private MealLogRepository repo;
 
     @PostMapping("/register")
     public Map<String, String> register(@RequestBody User user) {
@@ -56,26 +66,6 @@ public class AuthController {
                                 .body("Error contacting ML service: " + e.getMessage());
         }
     }
-
-
-
-    // @PostMapping("/pred")
-    // public void pred(@RequestBody String input) {
-    //     try {
-    //     RestTemplate restTemplate = new RestTemplate();
-    //     String mlUrl = "http://localhost:5002/predict";
-    
-    //     HttpHeaders headers = new HttpHeaders();
-    //     headers.setContentType(MediaType.APPLICATION_JSON);
-    //     HttpEntity<String> request = new HttpEntity<>("", headers);
-    
-    //     ResponseEntity<String> response = restTemplate.postForEntity(mlUrl, request, String.class);
-    //     ResponseEntity.ok(response.getBody());
-                
-    //     } catch (Exception e) {
-    //         System.out.println("Error contacting ML service: " + e.getMessage());
-    //     }
-    // }
 
     @PostMapping("/pred")
     public Map<String, String> pred(@RequestBody Map<String, Object> inputData) {
@@ -113,7 +103,88 @@ public class AuthController {
             e.printStackTrace();
             return Map.of("error", "ML service error: " + e.getMessage());
         }
-}
+        
+    }
 
+    @PostMapping("/meals")
+    public Map<String, String> meals(@RequestBody MealLog inputData) {
+        try {
+            System.out.println("Input data: " + inputData.getFoodName() + inputData.getUser_id());
+            authService.saveMealLog(inputData);
+            return Map.of("message", "Added meals successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Map.of("error", "MEAL service error: " + e.getMessage());
+        }
+    }
+
+    // @PostMapping("/mealslog")
+    // public Map<String, String> meals(@RequestBody String id) {
+    //     try {
+    //         List<MealLog> mealLogs = authService.getAllMealLogs();
+    //         return Map.of("result", "mealLogs successfully", "mealLogs", mealLogs.toString());
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //         return Map.of("error", "MEAL service error: " + e.getMessage());
+    //     }
+    // }
+
+    @PostMapping("/mealslog")
+    public ResponseEntity<Map<String, Object>> meals(@RequestBody String id) {
+        try {
+            List<MealLog> mealLogs = authService.getAllMealLogs();
+            Map<String, Object> response = new HashMap<>();
+            response.put("result", "mealLogs successfully");
+            response.put("mealLogs", mealLogs);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "MEAL service error: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/food")
+    public ResponseEntity<Map<String, String>> uploadFoodImage(@RequestParam("image") MultipartFile image) {
+        try {
+            String mlUrl = "http://host.docker.internal:5002/food"; // Flask backend
+    
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    
+            // Prepare image as ByteArrayResource
+            ByteArrayResource resource = new ByteArrayResource(image.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return image.getOriginalFilename();
+                }
+            };
+    
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("image", resource);
+    
+            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+    
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<String> flaskResponse = restTemplate.postForEntity(mlUrl, requestEntity, String.class);
+    
+            // Parse JSON string response into a Map<String, Object>
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> rawMap = objectMapper.readValue(flaskResponse.getBody(), Map.class);
+    
+            // Convert values to String format
+            Map<String, String> result = new HashMap<>();
+            for (Map.Entry<String, Object> entry : rawMap.entrySet()) {
+                result.put(entry.getKey(), entry.getValue().toString());
+            }
+    
+            return ResponseEntity.ok(result);
+    
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to upload image: " + e.getMessage()));
+        }
+    }
 
 }
