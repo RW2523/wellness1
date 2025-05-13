@@ -21,6 +21,8 @@ public class telehealth_handling implements database_handling{
     public Boolean insert_into_db(user user)
     {
        Connection connection = null;
+       if (user.getrole()=="patient")
+       {
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -42,7 +44,7 @@ public class telehealth_handling implements database_handling{
                 //set insert values
                 //preparedStatement.setString(1,user.getname());
                 preparedStatement.setString(1,insert_meeting_info.getuser().getname());
-                preparedStatement.setString(2,insert_meeting_info.getuser().getdrname());
+                preparedStatement.setString(2,insert_meeting_info.getpartner());
                 preparedStatement.setString(3,insert_meeting_info.getmeetinglink());
                 preparedStatement.setDate(4,insert_meeting_info.getdate());
                 rowsaffected += preparedStatement.executeUpdate();
@@ -64,6 +66,55 @@ public class telehealth_handling implements database_handling{
         //insert list information as row
         //return true if successful
         return false;
+    }
+    else if (user.getrole()=="doctor")
+       {
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/user_info",
+                user.getusername(), user.getpass());
+                //db is user info->stores credentials and health info
+    
+            //create statement
+            List<telehealth_record> datatoinsert=user.getmeetinginfo();
+            int rowsaffected=0;
+            String insertstatement="INSERT INTO meeting_information VALUES (?, ?, ?,?)";
+
+            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            for (int i=0;i<datatoinsert.size();i++)
+            {
+
+                telehealth_record insert_meeting_info=datatoinsert.get(i);
+                //set insert values
+                //preparedStatement.setString(1,user.getname());
+                preparedStatement.setString(1,insert_meeting_info.getpartner());
+                preparedStatement.setString(2,insert_meeting_info.getuser().getname());
+                preparedStatement.setString(3,insert_meeting_info.getmeetinglink());
+                preparedStatement.setDate(4,insert_meeting_info.getdate());
+                rowsaffected += preparedStatement.executeUpdate();
+
+            }
+            
+            
+            preparedStatement.close();
+            connection.close();
+             if (rowsaffected>0)
+            {
+                return true;
+            
+            }
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        } //access database with credentials
+        //insert list information as row
+        //return true if successful
+        return false;
+    }
+    return false;
+
     }
   
     @Override
