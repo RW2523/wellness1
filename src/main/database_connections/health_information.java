@@ -28,7 +28,7 @@ public class health_information implements database_handling{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                user.getusername(), user.getpass());
                 //db is user info->stores credentials and health info
     
             //create statement
@@ -75,7 +75,7 @@ public class health_information implements database_handling{
     }
   
     @Override
-    public List<user_health_info> retrieve_patient_from_db(String user) 
+    public List<user_health_info> retrieve_patient_from_db(String user, String pass) 
     {
         Connection connection = null;
         List<user_health_info>userinfo=new ArrayList<>();
@@ -85,7 +85,7 @@ public class health_information implements database_handling{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                user, pass);
                 //db is user infor->stores credentials and health info
     
             //create statement
@@ -124,7 +124,7 @@ public class health_information implements database_handling{
 
 }
     @Override
-    public List<user_health_info> retrieve_doctor_from_db(String doctor) 
+    public List<user_health_info> retrieve_doctor_from_db(String doctor,String pass) 
     {
         Connection connection = null;
         List<user_health_info>userinfo=new ArrayList<>();
@@ -134,11 +134,11 @@ public class health_information implements database_handling{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                doctor, pass);
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String retrievestatement="Select * from health_data where doctor_name = ?";
+            String retrievestatement="Select * from health_data inner join doctor_credentials on (health_data.doctor_name= doctor_credentials.name) where doctor_credentials.username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(retrievestatement);
             //insert values to be entered
             preparedStatement.setString(1,doctor);

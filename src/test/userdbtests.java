@@ -57,7 +57,7 @@ public class userdbtests
     @Test
     public void testinsertrowdoctor()
     {
-        user user=new user("drname","user", "pass", "email", "doctor");
+        user user=new user("doctor","drtest", "pass", "test_email", "doctor");
         usersdb test=new usersdb();
         Boolean correct=true;
         Boolean result=test.insert_into_db(user);
@@ -68,7 +68,7 @@ public class userdbtests
     {
         user user=new user("name","user", "pass", "email", "patient");
         usersdb test=new usersdb();
-        user retreieveduser=test.retrieve_patient_from_db(user.getname());
+        user retreieveduser=test.retrieve_patient_from_db(user.getusername(),user.getpass());
         
         assertEquals(user.getusername(),retreieveduser.getusername());
         assertEquals(user.getpass(),retreieveduser.getpass());
@@ -78,14 +78,14 @@ public class userdbtests
      @Test
     public void testretrievedrrow()
     {
-        user user=new user("drname","user", "pass", "email", "doctor");
+        user doctor=new user("doctor","drtest", "pass", "test_email", "doctor");
         usersdb test=new usersdb();
-        user retreieveduser=test.retrieve_doctor_from_db(user.getname());
+        user retreieveduser=test.retrieve_doctor_from_db(doctor.getusername(),doctor.getpass());
         
-        assertEquals(user.getusername(),retreieveduser.getusername());
-        assertEquals(user.getpass(),retreieveduser.getpass());
-        assertEquals(user.getemail(),retreieveduser.getemail());
-        assertEquals(user.getrole(),retreieveduser.getrole());
+        assertEquals(doctor.getusername(),retreieveduser.getusername());
+        assertEquals(doctor.getpass(),retreieveduser.getpass());
+        assertEquals(doctor.getemail(),retreieveduser.getemail());
+        assertEquals(doctor.getrole(),retreieveduser.getrole());
     }
     
     

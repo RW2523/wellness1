@@ -57,7 +57,7 @@ public class health_infodbtests
         user_health_info test_health_info=new user_health_info(Sleepcycle, heartrate, 5000,date);
         user.addhealthinfo(test_health_info);
         List<user_health_info> results=new ArrayList<>();
-        results=test.retrieve_patient_from_db(user.getusername());
+        results=test.retrieve_patient_from_db(user.getusername(),user.getpass());
         
         assertEquals(Sleepcycle,results.get(0).getsleepcycle());
         assertEquals(heartrate,results.get(0).getheartRate());
@@ -67,12 +67,13 @@ public class health_infodbtests
     @Test
     public void testretrieverowdoctor()
     {
-        user user=new user("name","user", "pass", "email", "role");
+        //user user=new user("name","user", "pass", "email", "role");
         health_information test=new health_information();
         //inititalize health information
-        
-        String drname="doctor";
-        user.setdrname(drname);
+        user doctor=new user("doctor","drtest", "pass", "test_email", "doctor");
+
+        //String drname="doctor";
+        //user.setdrname(drname);
         String Sleepcycle="sleepcycle";
         Float heartrate=99.9f;
         int stepcount=5000;
@@ -80,9 +81,9 @@ public class health_infodbtests
         
         Date date=Date.valueOf(datestring);
         user_health_info test_health_info=new user_health_info(Sleepcycle, heartrate, 5000,date);
-        user.addhealthinfo(test_health_info);
+        doctor.addhealthinfo(test_health_info);
         List<user_health_info> results=new ArrayList<>();
-        results=test.retrieve_doctor_from_db(drname);
+        results=test.retrieve_doctor_from_db(doctor.getusername(),doctor.getpass());
         
         assertEquals(Sleepcycle,results.get(0).getsleepcycle());
         assertEquals(heartrate,results.get(0).getheartRate());

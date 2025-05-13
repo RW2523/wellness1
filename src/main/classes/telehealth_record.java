@@ -8,14 +8,17 @@ public class telehealth_record
     //telehealth record 
     user user=null;
     user doctor;
+    String partner;
     String meeting_link;
     Date date;
     //date format 'YYYY-MM-DD HH:mm:ss' 
-
-    public telehealth_record(user user, user doctor, String meeting_link, Date date)
+    //user is either patient or doctor depending
+    //hols a user, the partner they meet with, the meeting link, and the date
+    public telehealth_record(user user, String partner, String meeting_link, Date date)
     {
+        
         this.user=user;
-        this.doctor=doctor;
+        this.partner=partner;
         this.meeting_link=meeting_link;
         this.date=date;
 
@@ -26,9 +29,13 @@ public class telehealth_record
         return this.user;
     }
 
-    public user getdoctor()
+    public String getpartner()
     {
-        return this.doctor;
+        return this.partner;
+    }
+     public void setpartner(String partner)
+    {
+        this.partner=partner;
     }
     public String getmeetinglink()
     {

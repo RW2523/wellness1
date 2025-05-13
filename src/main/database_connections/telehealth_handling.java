@@ -26,7 +26,7 @@ public class telehealth_handling implements database_handling{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                user.getusername(), user.getpass());
                 //db is user info->stores credentials and health info
     
             //create statement
@@ -67,7 +67,7 @@ public class telehealth_handling implements database_handling{
     }
   
     @Override
-    public List<telehealth_record> retrieve_patient_from_db(String patient) 
+    public List<telehealth_record> retrieve_patient_from_db(String patient, String pass) 
     {
         Connection connection = null;
         List<telehealth_record>userinfo=new ArrayList<>();
@@ -77,11 +77,11 @@ public class telehealth_handling implements database_handling{
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                patient, pass);
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String retrievestatement="Select * from meeting_information where patient=?";
+            String retrievestatement="Select * from meeting_information inner join user_credentials on (meeting_information.patient= user_credentials.name) where user_credentials.username=?";
             PreparedStatement preparedStatement = connection.prepareStatement(retrievestatement);
             //insert values to be entered
             preparedStatement.setString(1,patient);
@@ -93,13 +93,14 @@ public class telehealth_handling implements database_handling{
                 String patient_name = resultSet.getString("patient");
                 System.out.println(patient_name);
                 usersdb usersdb=new usersdb();
-                user patient_user=usersdb.retrieve_patient_from_db(patient_name);
+                user patient_user=usersdb.retrieve_patient_from_db(patient,pass);
                 System.out.println(patient_user.getname());
                 String doctor = resultSet.getString("doctor");
-                user doctor_user=usersdb.retrieve_doctor_from_db(doctor);
+                //user doctor_user=usersdb.retrieve_doctor_from_db(doctor);
+                patient_user.setdrname(doctor);
                 String meeting_link= resultSet.getString("meeting_link");               
                 Date date = resultSet.getDate("meeting_date");
-                telehealth_record datatoinsert= new telehealth_record(patient_user,doctor_user,meeting_link,date);
+                telehealth_record datatoinsert= new telehealth_record(patient_user,doctor,meeting_link,date);
                 userinfo.add(datatoinsert);
             }
             resultSet.close();
@@ -117,7 +118,7 @@ public class telehealth_handling implements database_handling{
         return userinfo;
 
 }
-public List<telehealth_record> retrieve_doctor_from_db(String doctor) 
+public List<telehealth_record> retrieve_doctor_from_db(String doctor, String pass) 
     {
         Connection connection = null;
         List<telehealth_record>userinfo=new ArrayList<>();
@@ -127,7 +128,7 @@ public List<telehealth_record> retrieve_doctor_from_db(String doctor)
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                doctor, pass);
                 //db is user infor->stores credentials and health info
     
             //create statement
@@ -143,11 +144,11 @@ public List<telehealth_record> retrieve_doctor_from_db(String doctor)
              {
                 String patient_name = resultSet.getString("patient");
                 usersdb usersdb=new usersdb();
-                user patient_user=usersdb.retrieve_patient_from_db(patient_name);
+                //user patient_user=usersdb.retrieve_patient_from_db(patient_name);
                 String doctor_name = resultSet.getString("doctor");
-                user doctor_user=usersdb.retrieve_doctor_from_db(doctor_name);
+                user doctor_user=usersdb.retrieve_doctor_from_db(doctor_name,pass);
                 String meeting_link= resultSet.getString("Meeting_link");               Date date = resultSet.getDate("meeting_date");
-                telehealth_record datatoinsert= new telehealth_record(patient_user,doctor_user,meeting_link,date);
+                telehealth_record datatoinsert= new telehealth_record(doctor_user,patient_name,meeting_link,date);
                 userinfo.add(datatoinsert);
             }
             resultSet.close();

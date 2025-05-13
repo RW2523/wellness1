@@ -150,7 +150,7 @@ public class usersdb implements database_handling
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                user.getusername(), user.getpass());
                 //db is user infor->stores credentials and health info
     
             //create statement
@@ -225,7 +225,7 @@ public class usersdb implements database_handling
   
     @Override
     //pass patient username
-    public user retrieve_patient_from_db(String user) 
+    public user retrieve_patient_from_db(String user,String pass) 
     {
         Connection connection = null;
         //List<String>userinfo=new ArrayList<>();
@@ -237,10 +237,11 @@ public class usersdb implements database_handling
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                user, pass);
+            System.out.println("connection sucess");
                 //db is user infor->stores credentials and health info
             //create statement
-            String insertstatement="Select * from user_credentials where name = ?";
+            String insertstatement="Select * from user_credentials where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
             preparedStatement.setString(1,user);
@@ -278,7 +279,7 @@ public class usersdb implements database_handling
     }
     @Override
     //pass doctor username
-    public user retrieve_doctor_from_db(String doctor)
+    public user retrieve_doctor_from_db(String doctor,String pass)
     {
         Connection connection = null;
         //List<String>userinfo=new ArrayList<>();
@@ -290,10 +291,10 @@ public class usersdb implements database_handling
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
-                "test", "test");
+                doctor, pass);
                 //db is user infor->stores credentials and health info
             //create statement
-            String insertstatement="Select * from doctor_credentials where name = ?";
+            String insertstatement="Select * from doctor_credentials where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
             preparedStatement.setString(1,doctor);

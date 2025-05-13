@@ -32,7 +32,7 @@ public class meetings_db_tests
      String meetinglink="meeting link here";
      String datestring="2025-07-05";
      Date date=Date.valueOf(datestring);
-     telehealth_record meetingtoinsert=new telehealth_record(patient, doctor, meetinglink, date);
+     telehealth_record meetingtoinsert=new telehealth_record(patient, "drname", meetinglink, date);
      patient.addmeetinginfo(meetingtoinsert);
      patient.setdrname("drname");
      telehealth_handling testhandler=new telehealth_handling();
@@ -48,15 +48,15 @@ public class meetings_db_tests
      String meetinglink="meeting link here";
      String datestring="2025-07-05";
      Date date=Date.valueOf(datestring);
-     telehealth_record meetingtoinsert=new telehealth_record(patient, doctor, meetinglink, date);
+     telehealth_record meetingtoinsert=new telehealth_record(patient, "drname", meetinglink, date);
      patient.addmeetinginfo(meetingtoinsert);
      patient.setdrname("drname");
      telehealth_handling testhandler=new telehealth_handling();
      List<telehealth_record> results=new ArrayList<>();
-     results=testhandler.retrieve_patient_from_db(patient.getname());
+     results=testhandler.retrieve_patient_from_db(patient.getusername(),patient.getpass());
      System.out.println("results"+results);
      assertEquals(patient.getname(),results.get(0).getuser().getname());
-     assertEquals(doctor.getname(),results.get(0).getdoctor().getname());
+     assertEquals(doctor.getname(),results.get(0).getpartner());
      //ssertEquals(stepcount,results.get(0).getstepcount());
      assertEquals(date,results.get(0).getdate());
      /*
@@ -73,16 +73,16 @@ public class meetings_db_tests
      String meetinglink="meeting link here";
      String datestring="2025-07-05";
      Date date=Date.valueOf(datestring);
-     telehealth_record meetingtoinsert=new telehealth_record(patient, doctor, meetinglink, date);
+     telehealth_record meetingtoinsert=new telehealth_record(doctor, "name", meetinglink, date);
      patient.addmeetinginfo(meetingtoinsert);
      patient.setdrname("drname");
      //create testhandler
      telehealth_handling testhandler=new telehealth_handling();
      List<telehealth_record> results=new ArrayList<>();
-     results=testhandler.retrieve_doctor_from_db(doctor.getname());
+     results=testhandler.retrieve_doctor_from_db(doctor.getname(),doctor.getpass());
      System.out.println("results"+results);
      assertEquals(patient.getname(),results.get(0).getuser().getname());
-     assertEquals(doctor.getname(),results.get(0).getdoctor().getname());
+     assertEquals(doctor.getname(),results.get(0).getpartner());
      //ssertEquals(stepcount,results.get(0).getstepcount());
      assertEquals(date,results.get(0).getdate());
      /*

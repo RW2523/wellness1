@@ -10,8 +10,8 @@ public class user {
     private final String password; //hold password
     private final String email;// hold email
     private final String role;
-    private final List<user_health_info> health_info=new ArrayList<>();
-    private final List<telehealth_record> scheduled_meetings=new ArrayList<>();
+    private  List<user_health_info> health_info=new ArrayList<>();
+    private  List<telehealth_record> scheduled_meetings=new ArrayList<>();
     public user(String name,String username, String pass, String email, String role)
     {
         this.name=name;
@@ -70,6 +70,10 @@ public class user {
     {
         return this.health_info;
     }
+    public  void sethealthinfolist(List<user_health_info> healthinfolist)
+    {
+         this.health_info=healthinfolist;
+    }
     //meeting informationadding
 
      public boolean addmeetinginfo(telehealth_record meetinginfo)
@@ -91,6 +95,11 @@ public class user {
     {
         return this.scheduled_meetings;
     }
+     public  void setmeetinglist(List<telehealth_record> scheduled_meetings)
+    {
+         this.scheduled_meetings=scheduled_meetings;
+    }
+    //
 
 
 }
