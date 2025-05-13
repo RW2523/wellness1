@@ -31,21 +31,35 @@ public class usersdb implements database_handling
 
     
             //grant user priviledges to different roles
-            String grantprivselect="Grant select on user_info.credentials to ?@localhost";
-            PreparedStatement preparedStatement = connection.prepareStatement(grantprivselect);
-            preparedStatement.setString(1,user.getusername());
+            String credentialsaccess="Grant select,insert on user_info.credentials to ?@localhost";
+            PreparedStatement preparedcredentialsaccess = connection.prepareStatement(credentialsaccess);
+            preparedcredentialsaccess.setString(1,user.getusername());
             //preparedStatement.setString(2,user.getpass());
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            preparedcredentialsaccess.executeUpdate();
+            preparedcredentialsaccess.close();
             
             //grant select, insert priviledges on health data to both
-            
+            String healdataccess="Grant select,insert on user_info.health_data to ?@localhost";
+            PreparedStatement preparedhealdataccess = connection.prepareStatement(healdataccess);
+            preparedhealdataccess.setString(1,user.getusername());
+            //preparedStatement.setString(2,user.getpass());
+            preparedhealdataccess.executeUpdate();
+            preparedhealdataccess.close();
+            // if role ==doctor, grant write permissions. 
 
             
             //insert values to be entered
-            
-                        
-            
+            if (user.getrole()=="doctor")
+            {
+                 //grant select, insert priviledges on health data to both
+                String healdataccess_doctor="Grant alter,delete on user_info.health_data to ?@localhost";
+                PreparedStatement preparedhealdataccess_doctor = connection.prepareStatement(healdataccess_doctor);
+                preparedhealdataccess_doctor.setString(1,user.getusername());
+                //preparedStatement.setString(2,user.getpass());
+                preparedhealdataccess_doctor.executeUpdate();
+                preparedhealdataccess_doctor.close();
+
+            }
             connection.close();
              
             return true;

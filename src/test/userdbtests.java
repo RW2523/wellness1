@@ -31,10 +31,10 @@ public class userdbtests
         assertEquals(correct,result);
 
     }
-     @Test
-    public void grantuserpriviledges()
+    @Test
+     public void createuser_assignprivilegesdoctortest()
     {
-        user user=new user("user", "pass", "email", "role");
+        user user=new user("drtest", "pass", "test_email", "doctor");
         usersdb test=new usersdb();
         Boolean correct=true;
         Boolean result=test.create_user(user);
