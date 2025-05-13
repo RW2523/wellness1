@@ -19,23 +19,37 @@ public class usersdb implements database_handling
                 "jdbc:mysql://localhost:3306/user_info",
                 "test", "test");
                 //db is user infor->stores credentials and health info
+                 
+            //if user_role="doctor" or user_role==patient
+            //create user blah 
+            String createuseString="Create USER ?@localhost identified by ?";
+            PreparedStatement createuser = connection.prepareStatement(createuseString);
+            createuser.setString(1,user.getusername());
+            createuser.setString(2,user.getpass());
+            createuser.executeUpdate();
+            createuser.close();
+
     
-            //create statement
-            String insertstatement="INSERT INTO credentials VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            //grant user priviledges to different roles
+            String grantprivselect="Grant select on user_info.credentials to ?@localhost";
+            PreparedStatement preparedStatement = connection.prepareStatement(grantprivselect);
+            preparedStatement.setString(1,user.getusername());
+            //preparedStatement.setString(2,user.getpass());
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            
+            //grant select, insert priviledges on health data to both
+            
+
+            
             //insert values to be entered
             
-            int rowsAffected = preparedStatement.executeUpdate();
+                        
             
-            ResultSet resultSet;
-            
-            preparedStatement.close();
             connection.close();
-             if (rowsAffected>0)
-            {
-                return true;
+             
+            return true;
             
-            }
         }
         catch (Exception exception) {
             System.out.println(exception);

@@ -22,6 +22,27 @@ import main.usersdb;
 public class userdbtests
 {
     @Test
+    public void createuser_assignprivilegestest()
+    {
+        user user=new user("user", "pass", "email", "role");
+        usersdb test=new usersdb();
+        Boolean correct=true;
+        Boolean result=test.create_user(user);
+        assertEquals(correct,result);
+
+    }
+     @Test
+    public void grantuserpriviledges()
+    {
+        user user=new user("user", "pass", "email", "role");
+        usersdb test=new usersdb();
+        Boolean correct=true;
+        Boolean result=test.create_user(user);
+        assertEquals(correct,result);
+
+    }
+
+    @Test
     public void testinsertrow()
     {
         user user=new user("user", "pass", "email", "role");
