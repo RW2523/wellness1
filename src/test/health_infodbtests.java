@@ -17,10 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 import java.sql.Date;
 
-import main.health_information;
-import main.user;
-import main.user_health_info;
-import main.usersdb;
+import main.classes.user;
+import main.classes.user_health_info;
+import main.database_connections.health_information;
+import main.database_connections.usersdb;
 
 public class health_infodbtests
  

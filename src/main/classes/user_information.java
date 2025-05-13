@@ -1,4 +1,4 @@
-package main;
+package main.classes;
 //hold list of all current users 
 import java.util.List;
 import java.util.ArrayList;

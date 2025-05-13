@@ -16,14 +16,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import main.user;
-import main.usersdb;
+import main.classes.user;
+import main.database_connections.usersdb;
 
 public class userdbtests
 {
     @Test
     public void createuser_assignprivilegestest()
     {
+        //run query SELECT User, Host FROM mysql.user;
+        //if user user shows up, use the follwoing command:drop user 'user'@localhost;
+        //use show grants for 'user'@'localhost' to see privileges granted
         user user=new user("user", "pass", "email", "role");
         usersdb test=new usersdb();
         Boolean correct=true;

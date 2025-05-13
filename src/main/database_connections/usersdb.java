@@ -1,6 +1,9 @@
-package main;
+package main.database_connections;
 import java.util.ArrayList;
 import java.util.List;
+
+import main.classes.user;
+
 import java.sql.*;
 public class usersdb implements database_handling
 {

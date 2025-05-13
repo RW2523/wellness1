@@ -1,4 +1,4 @@
-package main;
+package main.database_connections;
 
 
 import java.nio.FloatBuffer;
@@ -9,6 +9,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
+
+import main.classes.user;
+import main.classes.user_health_info;
 
 public class health_information implements database_handling{
 //adds input data to the health database and gets it for the user

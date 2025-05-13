@@ -1,5 +1,7 @@
-package main;
+package main.database_connections;
 import java.util.List;
+
+import main.classes.user;
 
 public interface database_handling 
 
