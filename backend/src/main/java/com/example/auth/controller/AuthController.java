@@ -33,17 +33,35 @@ public class AuthController {
     @Autowired
     private MealLogRepository repo;
 
-    @PostMapping("/register")
-    public Map<String, String> register(@RequestBody User user) {
-        String message = authService.register(user);
-        return Map.of("message", message);
-    }
+    // @PostMapping("/register")
+    // public Map<String, String> register(@RequestBody User user) {
+    //     String message = authService.register(user);
+    //     return Map.of("message", message);
+    // }
 
-    @PostMapping("/login")
-    public Map<String, String> login(@RequestBody Map<String, String> loginData) {
-        String message = authService.login(loginData.get("email"), loginData.get("password"));
-        return Map.of("message", message);
+    // @PostMapping("/login")
+    // public Map<String, String> login(@RequestBody Map<String, String> loginData) {
+    //     String message = authService.login(loginData.get("email"), loginData.get("password"));
+    //     return Map.of("message", message);
+    // }
+
+    @PostMapping("/register")
+public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+    String message = authService.register(user);
+    if ("User already exists".equalsIgnoreCase(message)) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", message));
     }
+    return ResponseEntity.ok(Map.of("message", message));
+}
+
+@PostMapping("/login")
+public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginData) {
+    String message = authService.login(loginData.get("email"), loginData.get("password"));
+    if ("Invalid credentials".equalsIgnoreCase(message)) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", message));
+    }
+    return ResponseEntity.ok(Map.of("message", message));
+}
 
     static class InputData {
         public List<Double> features;
@@ -147,40 +165,40 @@ public class AuthController {
     @PostMapping("/food")
     public ResponseEntity<Map<String, String>> uploadFoodImage(@RequestParam("image") MultipartFile image) {
         try {
-            String mlUrl = "http://host.docker.internal:5002/food"; // Flask backend
-    
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-    
-            // Prepare image as ByteArrayResource
-            ByteArrayResource resource = new ByteArrayResource(image.getBytes()) {
-                @Override
-                public String getFilename() {
-                    return image.getOriginalFilename();
-                }
-            };
-    
-            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("image", resource);
-    
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-    
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> flaskResponse = restTemplate.postForEntity(mlUrl, requestEntity, String.class);
-    
-            // Parse JSON string response into a Map<String, Object>
-            ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> rawMap = objectMapper.readValue(flaskResponse.getBody(), Map.class);
-    
-            // Convert values to String format
-            Map<String, String> result = new HashMap<>();
-            for (Map.Entry<String, Object> entry : rawMap.entrySet()) {
-                result.put(entry.getKey(), entry.getValue().toString());
+        String mlUrl = "http://host.docker.internal:5002/food"; // Flask backend
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        // Prepare image as ByteArrayResource
+        ByteArrayResource resource = new ByteArrayResource(image.getBytes()) {
+            @Override
+            public String getFilename() {
+                return image.getOriginalFilename();
             }
-    
-            return ResponseEntity.ok(result);
-    
-        } catch (Exception e) {
+        };
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("image", resource);
+
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> flaskResponse = restTemplate.postForEntity(mlUrl, requestEntity, String.class);
+
+        // Parse JSON string response into a Map<String, Object>
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> rawMap = objectMapper.readValue(flaskResponse.getBody(), Map.class);
+
+        // Convert values to String format
+        Map<String, String> result = new HashMap<>();
+        for (Map.Entry<String, Object> entry : rawMap.entrySet()) {
+            result.put(entry.getKey(), entry.getValue().toString());
+        }
+
+        return ResponseEntity.ok(result);
+
+    } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Failed to upload image: " + e.getMessage()));
