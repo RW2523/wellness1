@@ -4,18 +4,25 @@ import java.util.ArrayList;
 public class user {
     //!resultSet.isBeforeFirst()
 
-    private final String username; //hold username
+    private final String username;
+    private final String name;
+    private  String doctorname; //hold username
     private final String password; //hold password
-    private final String role; //rold role
     private final String email; // hold email
     private final List<user_health_info> health_info=new ArrayList<>();
     private final List<telehealth_record> scheduled_meetings=new ArrayList<>();
-    public user(String username, String pass, String email, String role)
+    public user(String name,String username, String pass, String email, String Drname)
     {
+        this.name=name;
         this.username=username;
         this.password=pass;
         this.email=email;
-        this.role=role;
+        this.doctorname=Drname;
+
+    }
+    public String getname()
+    {
+        return this.name;
     }
     public String getusername()
     {
@@ -29,9 +36,14 @@ public class user {
     {
         return this.email;
     }
-     public String getrole()
+   
+     public String getdrname()
     {
-        return this.role;
+        return this.doctorname;
+    }
+    public void setdrname(String drname)
+    {
+        this.doctorname=drname;
     }
     //health info adding
     public boolean addhealthinfo(user_health_info healthinfo)

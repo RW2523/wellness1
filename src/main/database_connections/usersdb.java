@@ -50,19 +50,16 @@ public class usersdb implements database_handling
             preparedhealdataccess.close();
             // if role ==doctor, grant write permissions. 
 
-            
-            //insert values to be entered
-            if (user.getrole()=="doctor")
-            {
-                 //grant select, insert priviledges on health data to both
-                String healdataccess_doctor="Grant alter,delete on user_info.health_data to ?@localhost";
-                PreparedStatement preparedhealdataccess_doctor = connection.prepareStatement(healdataccess_doctor);
-                preparedhealdataccess_doctor.setString(1,user.getusername());
-                //preparedStatement.setString(2,user.getpass());
-                preparedhealdataccess_doctor.executeUpdate();
-                preparedhealdataccess_doctor.close();
 
-            }
+            
+            //grant select priviledges on meetingstable data to both
+            String meetinginfoaccess="Grant select on user_info.meeting_information to ?@localhost";
+            PreparedStatement preparedmeetinginfoaccess = connection.prepareStatement(meetinginfoaccess);
+            preparedmeetinginfoaccess.setString(1,user.getusername());
+             //preparedStatement.setString(2,user.getpass());
+            preparedmeetinginfoaccess.executeUpdate();
+            preparedmeetinginfoaccess.close();
+
             connection.close();
              
             return true;
@@ -89,13 +86,14 @@ public class usersdb implements database_handling
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String insertstatement="INSERT INTO credentials VALUES (?, ?, ?, ?)";
+            String insertstatement="INSERT INTO user_credentials VALUES (?,?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
-            preparedStatement.setString(1,user.getusername());
-            preparedStatement.setString(2,user.getpass());
-            preparedStatement.setString(3,user.getemail());
-            preparedStatement.setString(4,user.getrole());
+            preparedStatement.setString(1,user.getname());
+            preparedStatement.setString(2,user.getusername());
+            preparedStatement.setString(3,user.getpass());
+            preparedStatement.setString(4,user.getemail());
+            preparedStatement.setString(5,user.getdrname());
             int rowsAffected = preparedStatement.executeUpdate();
             
             
@@ -133,7 +131,7 @@ public class usersdb implements database_handling
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String insertstatement="Select * from credentials where username = ?";
+            String insertstatement="Select * from user_credentials where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
             preparedStatement.setString(1,user);
@@ -144,12 +142,13 @@ public class usersdb implements database_handling
              while (resultSet.next()) 
              {
                 //get userinfor from database
+                String name = resultSet.getString("name");
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
                 String email = resultSet.getString("email");
-                String role = resultSet.getString("role");
+                String drname = resultSet.getString("doctorname");
                 //set user info
-                currentuser=new user(username, password, email,role);
+                currentuser=new user(name,username, password, email,drname);
 
 
             }

@@ -1,5 +1,5 @@
 package main.classes;
-//hold list of all current users 
+//hold list of all current users and doctors
 import java.util.List;
 import java.util.ArrayList;
 
