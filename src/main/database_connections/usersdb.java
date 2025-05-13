@@ -14,6 +14,8 @@ public class usersdb implements database_handling
 
     public boolean create_user(user user)
     {
+        if (user.getrole()=="patient")
+        {
         Connection connection = null;
         try {
             // below two lines are used for connectivity.
@@ -53,7 +55,7 @@ public class usersdb implements database_handling
 
             
             //grant select priviledges on meetingstable data to both
-            String meetinginfoaccess="Grant select on user_info.meeting_information to ?@localhost";
+            String meetinginfoaccess="Grant select,insert on user_info.meeting_information to ?@localhost";
             PreparedStatement preparedmeetinginfoaccess = connection.prepareStatement(meetinginfoaccess);
             preparedmeetinginfoaccess.setString(1,user.getusername());
              //preparedStatement.setString(2,user.getpass());
@@ -71,13 +73,79 @@ public class usersdb implements database_handling
         //insert list information as row
         //return true if successful
         return false;
-    
     }
+    else if (user.getrole()=="doctor")
+        {
+        Connection connection = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/user_info",
+                "test", "test");
+                //db is user infor->stores credentials and health info
+                 
+            //if user_role="doctor" or user_role==patient
+            //create user blah 
+            String createuseString="Create USER ?@localhost identified by ?";
+            PreparedStatement createuser = connection.prepareStatement(createuseString);
+            createuser.setString(1,user.getusername());
+            createuser.setString(2,user.getpass());
+            createuser.executeUpdate();
+            createuser.close();
+
+    
+            //grant user priviledges to different roles
+            String credentialsaccess="Grant select,insert,delete on user_info.credentials to ?@localhost";
+            PreparedStatement preparedcredentialsaccess = connection.prepareStatement(credentialsaccess);
+            preparedcredentialsaccess.setString(1,user.getusername());
+            //preparedStatement.setString(2,user.getpass());
+            preparedcredentialsaccess.executeUpdate();
+            preparedcredentialsaccess.close();
+            
+            //grant select, insert priviledges on health data to both
+            String healdataccess="Grant select,insert on user_info.health_data to ?@localhost";
+            PreparedStatement preparedhealdataccess = connection.prepareStatement(healdataccess);
+            preparedhealdataccess.setString(1,user.getusername());
+            //preparedStatement.setString(2,user.getpass());
+            preparedhealdataccess.executeUpdate();
+            preparedhealdataccess.close();
+            // if role ==doctor, grant write permissions. 
+
+
+            
+            //grant select priviledges on meetingstable data to both
+            String meetinginfoaccess="Grant select,insert,delete on user_info.meeting_information to ?@localhost";
+            PreparedStatement preparedmeetinginfoaccess = connection.prepareStatement(meetinginfoaccess);
+            preparedmeetinginfoaccess.setString(1,user.getusername());
+             //preparedStatement.setString(2,user.getpass());
+            preparedmeetinginfoaccess.executeUpdate();
+            preparedmeetinginfoaccess.close();
+
+            connection.close();
+             
+            return true;
+            
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        } //access database with credentials
+        //insert list information as row
+        //return true if successful
+        return false;
+    }
+
+      System.err.println("user neither doctor or patient");
+      return false;
+    
+}
     @Override
     public  Boolean insert_into_db(user user)
     {
-       Connection connection = null;
-        try {
+        if (user.getrole()=="patient")
+        {
+            Connection connection = null;
+            try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
@@ -111,18 +179,11 @@ public class usersdb implements database_handling
         //insert list information as row
         //return true if successful
         return false;
-        
-
     }
-  
-    @Override
-    public user retrieve_from_db(String user) 
-    {
-        Connection connection = null;
-        //List<String>userinfo=new ArrayList<>();
-       
-        user currentuser=null;
-        try {
+    if (user.getrole()=="doctor")
+        {
+            Connection connection = null;
+            try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(
@@ -130,6 +191,54 @@ public class usersdb implements database_handling
                 "test", "test");
                 //db is user infor->stores credentials and health info
     
+            //create statement
+            String insertstatement="INSERT INTO doctor_credentials VALUES (?,?, ?, ?)";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            //insert values to be entered
+            preparedStatement.setString(1,user.getname());
+            preparedStatement.setString(2,user.getusername());
+            preparedStatement.setString(3,user.getpass());
+            preparedStatement.setString(4,user.getemail());
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            
+            preparedStatement.close();
+            connection.close();
+             if (rowsAffected>0)
+            {
+                return true;
+            
+            }
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        } //access database with credentials
+        //insert list information as row
+        //return true if successful
+        return false;
+    }
+    System.err.println("user neither doctor or patient");
+    return false;
+        
+
+    }
+  
+    @Override
+    //pass patient username
+    public user retrieve_patient_from_db(String user) 
+    {
+        Connection connection = null;
+        //List<String>userinfo=new ArrayList<>();
+       
+        user currentuser=null;
+     
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/user_info",
+                "test", "test");
+                //db is user infor->stores credentials and health info
             //create statement
             String insertstatement="Select * from user_credentials where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
@@ -148,7 +257,59 @@ public class usersdb implements database_handling
                 String email = resultSet.getString("email");
                 String drname = resultSet.getString("doctorname");
                 //set user info
-                currentuser=new user(name,username, password, email,drname);
+                currentuser=new user(name,username, password, email,"patient");
+                currentuser.setdrname(drname);
+
+
+            }
+            resultSet.close();
+            preparedStatement.close();
+            connection.close();
+             
+          
+        }
+        catch (Exception exception) {
+            System.out.println(exception);
+        } //access database with credentials
+        //insert list information as row
+        //return true if successful
+        //return the current user
+        return currentuser;
+    }
+    @Override
+    //pass doctor username
+    public user retrieve_doctor_from_db(String doctor)
+    {
+        Connection connection = null;
+        //List<String>userinfo=new ArrayList<>();
+       
+        user currentuser=null;
+     
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/user_info",
+                "test", "test");
+                //db is user infor->stores credentials and health info
+            //create statement
+            String insertstatement="Select * from doctor_credentials where username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            //insert values to be entered
+            preparedStatement.setString(1,doctor);
+           
+            ResultSet resultSet = preparedStatement.executeQuery();
+            // ... process the data
+
+             while (resultSet.next()) 
+             {
+                //get userinfor from database
+                String name = resultSet.getString("name");
+                String username = resultSet.getString("username");
+                String password = resultSet.getString("password");
+                String email = resultSet.getString("email");
+                //set user info
+                currentuser=new user(name,username, password, email,"doctor");
 
 
             }
@@ -166,6 +327,11 @@ public class usersdb implements database_handling
         //return the current user
         return currentuser;
 
+    }
+    
+
+
+
         
     }
 
@@ -173,5 +339,5 @@ public class usersdb implements database_handling
 
 
     
-    }
+    
 

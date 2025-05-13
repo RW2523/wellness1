@@ -9,7 +9,6 @@ public class telehealth_record
     user user=null;
     user doctor;
     String meeting_link;
-
     Date date;
     //date format 'YYYY-MM-DD HH:mm:ss' 
 

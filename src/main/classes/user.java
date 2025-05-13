@@ -3,21 +3,22 @@ import java.util.List;
 import java.util.ArrayList;
 public class user {
     //!resultSet.isBeforeFirst()
-
+    //user roles are patient and doctor
     private final String username;
     private final String name;
     private  String doctorname; //hold username
     private final String password; //hold password
-    private final String email; // hold email
+    private final String email;// hold email
+    private final String role;
     private final List<user_health_info> health_info=new ArrayList<>();
     private final List<telehealth_record> scheduled_meetings=new ArrayList<>();
-    public user(String name,String username, String pass, String email, String Drname)
+    public user(String name,String username, String pass, String email, String role)
     {
         this.name=name;
         this.username=username;
         this.password=pass;
         this.email=email;
-        this.doctorname=Drname;
+        this.role=role;
 
     }
     public String getname()
@@ -44,6 +45,11 @@ public class user {
     public void setdrname(String drname)
     {
         this.doctorname=drname;
+    }
+ 
+    public String getrole()
+    {
+        return this.role;
     }
     //health info adding
     public boolean addhealthinfo(user_health_info healthinfo)
