@@ -54,3 +54,14 @@ body {
     background-color: #2dd4bf;
     border-radius: 5px;
 }
+/* 
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: transparent;
+    color: white;
+  }
+  
+  * {
+    box-sizing: border-box;
+  } */

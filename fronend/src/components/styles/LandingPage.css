@@ -1,0 +1,45 @@
+.landing-page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.center-content {
+  text-align: center;
+  z-index: 2;
+}
+
+.title {
+  font-size: 3em;
+  margin-bottom: 10px;
+  font-weight: 700;
+  color: white;
+  /* Remove glow */
+  text-shadow: none;
+}
+
+.subtitle {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+  color: #dfe6e9;
+}
+
+.start-button {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  background: white;          /* ✅ white button */
+  color: black;               /* ✅ black text */
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.start-button:hover {
+  background: #f0f0f0;
+  color: black;
+}

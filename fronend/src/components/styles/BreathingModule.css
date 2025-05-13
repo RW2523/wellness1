@@ -1,0 +1,144 @@
+.breathing-container {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-align: center;
+  z-index: 1;
+}
+
+.session-header {
+  position: absolute;
+  top: 20px;
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  font-size: 1.1em;
+  z-index: 2;
+}
+
+.session-timer {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: white;
+}
+
+.end-btn {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.end-btn:hover {
+  background: #f0f0f0;
+}
+
+.circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  margin-bottom: 30px;
+  transition: all 6s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.inhale {
+  transform: scale(1.5);
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.exhale {
+  transform: scale(1);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.circle h2 {
+  font-size: 1.8em;
+  margin: 0;
+}
+
+.circle p {
+  margin: 4px 0;
+  font-size: 1.1em;
+}
+
+.breathing-info p {
+  font-size: 1.2em;
+  margin: 5px 0;
+}
+
+.start-btn {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.start-btn:hover {
+  background: #f0f0f0;
+}
+
+.session-complete {
+  text-align: center;
+  margin-top: 20px;
+  color: white;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.session-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  background: white;
+  color: black;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.action-btn:hover {
+  background: #f0f0f0;
+}
+

@@ -9,8 +9,6 @@ function Meal() {
   const [predictions, setPredictions] = useState([]);
   const [manualFoodName, setManualFoodName] = useState("");
   const [mode, setMode] = useState("image");
-
-  // ADD THIS
   const [logs, setLogs] = useState([]);
   const [logsFetched, setLogsFetched] = useState(false);
 
@@ -30,35 +28,33 @@ function Meal() {
 
     const sortedPredictions = Object.entries(res.data)
       .map(([label, score]) => ({ label, score: parseFloat(score) }))
-      .sort((a, b) => b.score - a.score);  // Descending sort
+      .sort((a, b) => b.score - a.score);
 
     setPredictions(sortedPredictions);
   };
 
   const saveData = async (e) => {
-    const id = localStorage.getItem('id');
+    const id = localStorage.getItem("id");
     const data = {
       foodName: mode === "manual" ? manualFoodName : predictions[0]?.label,
       quantityInGrams: quantity,
       mealType,
       mealTime: new Date().toISOString(),
-      user_id: id
+      user_id: id,
     };
 
-    if (!data.foodName) {
-      return;
-    }
+    if (!data.foodName) return;
     e.preventDefault();
+
     try {
-      const res = await axios.post("http://localhost:8080/api/auth/meals", data, {
-        headers: { "Content-Type": "application/json" }
+      await axios.post("http://localhost:8080/api/auth/meals", data, {
+        headers: { "Content-Type": "application/json" },
       });
     } catch (error) {
       console.error("Error saving data:", error);
     }
   };
 
-  // ADD THIS: View logs function
   const viewLogs = async () => {
     const id = localStorage.getItem("id");
 
@@ -70,7 +66,7 @@ function Meal() {
       if (res.data.mealLogs) {
         const parsedLogs = Array.isArray(res.data.mealLogs)
           ? res.data.mealLogs
-          : res.data.mealLogs.split(",").map(item => item.trim());
+          : res.data.mealLogs.split(",").map((item) => item.trim());
 
         setLogs(parsedLogs);
       } else {
@@ -88,199 +84,234 @@ function Meal() {
     <div className="meal-container">
       <style dangerouslySetInnerHTML={{
         __html: `
-          .meal-container {
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 25px;
-            background-color: #f9f9f9;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            font-family: Arial, sans-serif;
+          body {
+            margin: 0;
+            padding: 0;
+            background-color: #d4f5ef;
+            font-family: 'Segoe UI', sans-serif;
           }
+
+          .meal-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background-color: #d4f5ef;
+          }
+
+          .meal-card {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            padding: 30px 35px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+          }
+
           h2 {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 20px;
+            color: #1e3a5f;
+            margin-bottom: 25px;
+            font-size: 28px;
           }
+
           .mode-switch {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-bottom: 15px;
-          }
-          .image-section {
+            gap: 30px;
             margin-bottom: 20px;
           }
+
           .image-preview {
             display: block;
             max-width: 100%;
-            margin: 10px auto;
-            border-radius: 8px;
+            margin: 15px auto;
+            border-radius: 10px;
           }
+
           .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
           }
+
           label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
           }
+
           input[type="text"],
           input[type="number"],
           select {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            margin-bottom: 5px;
+            padding: 10px;
             border: 1px solid #ccc;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 15px;
           }
+
           .input {
             margin-top: 10px;
-            padding: 8px;
+            padding: 10px;
             width: 100%;
             box-sizing: border-box;
+            font-size: 15px;
           }
+
           .primary-button,
           .save-button,
           .view-button {
             width: 100%;
-            padding: 10px;
-            background-color: #3498db;
+            padding: 12px;
+            background-color: #0d7490;
             border: none;
             color: white;
-            font-size: 16px;
-            border-radius: 6px;
+            font-size: 17px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 12px;
+            transition: background-color 0.3s ease;
           }
+
           .primary-button:hover,
           .save-button:hover,
           .view-button:hover {
-            background-color: #2980b9;
+            background-color: #0b5d72;
           }
+
           .prediction-box {
-            background: #eef5fa;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
+            background: #e0f7fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #0d7490;
           }
-          .prediction-box ul {
-            padding-left: 20px;
-          }
+
           .logs-section {
-            margin-top: 20px;
-            background: #e8f5e9;
-            padding: 10px;
-            border-radius: 8px;
+            margin-top: 25px;
+            background: #f1f8e9;
+            padding: 15px;
+            border-radius: 10px;
           }
+
           .logs-section ul {
             padding-left: 20px;
           }
-        `,
+
+          .logs-section div {
+            background: #fff;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+          }
+        `
       }} />
 
-      <h2>🍽️ Wellness Meal Logger</h2>
+      <div className="meal-card">
+        <h2>🍽️ Wellness Meal Logger</h2>
 
-      <div className="mode-switch">
-        <label>
-          <input
-            type="radio"
-            value="image"
-            checked={mode === "image"}
-            onChange={() => setMode("image")}
-          />
-          Image Upload
-        </label>
-        <label>
-          <input
-            type="radio"
-            value="manual"
-            checked={mode === "manual"}
-            onChange={() => setMode("manual")}
-          />
-          Manual Entry
-        </label>
-      </div>
-
-      {mode === "image" ? (
-        <div className="image-section">
-          <input type="file" accept="image/*" onChange={handleImageUpload} />
-          {preview && <img src={preview} alt="Preview" className="image-preview" />}
-          <button className="primary-button" onClick={classifyImage} disabled={!image}>Classify</button>
+        <div className="mode-switch">
+          <label>
+            <input
+              type="radio"
+              value="image"
+              checked={mode === "image"}
+              onChange={() => setMode("image")}
+            />
+            Image Upload
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="manual"
+              checked={mode === "manual"}
+              onChange={() => setMode("manual")}
+            />
+            Manual Entry
+          </label>
         </div>
-      ) : (
-        <input
-          type="text"
-          value={manualFoodName}
-          onChange={(e) => setManualFoodName(e.target.value)}
-          placeholder="Enter food name"
-          className="input"
-        />
-      )}
 
-      <div className="form-group">
-        <label>Meal Type:</label>
-        <select onChange={(e) => setMealType(e.target.value)} value={mealType}>
-          <option>Breakfast</option>
-          <option>Lunch</option>
-          <option>Dinner</option>
-        </select>
-      </div>
+        {mode === "image" ? (
+          <div className="image-section">
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+            {preview && <img src={preview} alt="Preview" className="image-preview" />}
+            <button className="primary-button" onClick={classifyImage} disabled={!image}>Classify</button>
+          </div>
+        ) : (
+          <input
+            type="text"
+            value={manualFoodName}
+            onChange={(e) => setManualFoodName(e.target.value)}
+            placeholder="Enter food name"
+            className="input"
+          />
+        )}
 
-      <div className="form-group">
-        <label>Quantity (grams):</label>
-        <input
-          type="number"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-          min="100"
-          max="500"
-          className="input"
-        />
-      </div>
-
-      {predictions.length > 0 && mode === "image" && (
-        <div className="prediction-box">
-          <h4>Top Predictions:</h4>
-          <ul>
-            {predictions.map(p => (
-              <li key={p.label}>{p.label} - {(p.score * 100).toFixed(1)}%</li>
-            ))}
-          </ul>
+        <div className="form-group">
+          <label>Meal Type:</label>
+          <select onChange={(e) => setMealType(e.target.value)} value={mealType}>
+            <option>Breakfast</option>
+            <option>Lunch</option>
+            <option>Dinner</option>
+          </select>
         </div>
-      )}
 
-      <button
-        className="save-button"
-        onClick={saveData}
-        disabled={mode === "image" && predictions.length === 0 && !manualFoodName}
-      >
-        Save Meal
-      </button>
+        <div className="form-group">
+          <label>Quantity (grams):</label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            min="100"
+            max="500"
+            className="input"
+          />
+        </div>
 
-      {/* ADD THIS: View Logs Section */}
-      <button className="view-button" onClick={viewLogs}>View Previous Logs</button>
-
-      {logsFetched && (
-        <div className="logs-section">
-          <h4>Previous Logs:</h4>
-          {logs.length > 0 ? (
+        {predictions.length > 0 && mode === "image" && (
+          <div className="prediction-box">
+            <h4>Top Predictions:</h4>
             <ul>
-              {logs.map((log, idx) => (
-                <div key={idx} style={{ border: "1px solid #ccc", padding: "8px", borderRadius: "6px", marginBottom: "6px" }}>
-                  <p><strong>Food:</strong> {log.foodName}</p>
-                  <p><strong>Meal Type:</strong> {log.mealType}</p>
-                  <p><strong>Quantity:</strong> {log.quantityInGrams} g</p>
-                  <p><strong>Time:</strong> {log.mealTime}</p>
-                </div>
+              {predictions.map(p => (
+                <li key={p.label}>{p.label} - {(p.score * 100).toFixed(1)}%</li>
               ))}
             </ul>
-          ) : (
-            <p>No logs found.</p>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+
+        <button
+          className="save-button"
+          onClick={saveData}
+          disabled={mode === "image" && predictions.length === 0 && !manualFoodName}
+        >
+          Save Meal
+        </button>
+
+        <button className="view-button" onClick={viewLogs}>View Previous Logs</button>
+
+        {logsFetched && (
+          <div className="logs-section">
+            <h4>Previous Logs:</h4>
+            {logs.length > 0 ? (
+              <ul>
+                {logs.map((log, idx) => (
+                  <div key={idx}>
+                    <p><strong>Food:</strong> {log.foodName}</p>
+                    <p><strong>Meal Type:</strong> {log.mealType}</p>
+                    <p><strong>Quantity:</strong> {log.quantityInGrams} g</p>
+                    <p><strong>Time:</strong> {log.mealTime}</p>
+                  </div>
+                ))}
+              </ul>
+            ) : (
+              <p>No logs found.</p>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
