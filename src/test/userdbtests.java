@@ -27,7 +27,7 @@ public class userdbtests
         //run query SELECT User, Host FROM mysql.user;
         //if user user shows up, use the follwoing command:drop user 'user'@localhost;
         //use show grants for 'user'@'localhost' to see privileges granted
-        user user=new user("user", "pass", "email", "role");
+        user user=new user("name","user", "pass", "email", "patient");
         usersdb test=new usersdb();
         Boolean correct=true;
         Boolean result=test.create_user(user);
@@ -37,7 +37,7 @@ public class userdbtests
     @Test
      public void createuser_assignprivilegesdoctortest()
     {
-        user user=new user("drtest", "pass", "test_email", "doctor");
+        user user=new user("doctor","drtest", "pass", "test_email", "doctor");
         usersdb test=new usersdb();
         Boolean correct=true;
         Boolean result=test.create_user(user);
@@ -46,25 +46,47 @@ public class userdbtests
     }
 
     @Test
-    public void testinsertrow()
+    public void testinsertrowpatient()
     {
-        user user=new user("user", "pass", "email", "role");
+        user user=new user("name","user", "pass", "email", "patient");
         usersdb test=new usersdb();
         Boolean correct=true;
         Boolean result=test.insert_into_db(user);
         assertEquals(correct,result);
     }
     @Test
-    public void testretrieverow()
+    public void testinsertrowdoctor()
     {
-        user user=new user("user", "pass", "email", "role");
+        user user=new user("drname","user", "pass", "email", "doctor");
         usersdb test=new usersdb();
-        user retreieveduser=test.retrieve_from_db(user.getusername());
+        Boolean correct=true;
+        Boolean result=test.insert_into_db(user);
+        assertEquals(correct,result);
+    }
+    @Test
+    public void testretrievepatientrow()
+    {
+        user user=new user("name","user", "pass", "email", "patient");
+        usersdb test=new usersdb();
+        user retreieveduser=test.retrieve_patient_from_db(user.getname());
         
         assertEquals(user.getusername(),retreieveduser.getusername());
         assertEquals(user.getpass(),retreieveduser.getpass());
         assertEquals(user.getemail(),retreieveduser.getemail());
         assertEquals(user.getrole(),retreieveduser.getrole());
     }
+     @Test
+    public void testretrievedrrow()
+    {
+        user user=new user("drname","user", "pass", "email", "doctor");
+        usersdb test=new usersdb();
+        user retreieveduser=test.retrieve_doctor_from_db(user.getname());
+        
+        assertEquals(user.getusername(),retreieveduser.getusername());
+        assertEquals(user.getpass(),retreieveduser.getpass());
+        assertEquals(user.getemail(),retreieveduser.getemail());
+        assertEquals(user.getrole(),retreieveduser.getrole());
+    }
+    
     
 }

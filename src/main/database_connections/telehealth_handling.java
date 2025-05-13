@@ -30,21 +30,21 @@ public class telehealth_handling implements database_handling{
                 //db is user info->stores credentials and health info
     
             //create statement
-            List<user_health_info> datatoinsert=user.gethealthinfolist();
+            List<telehealth_record> datatoinsert=user.getmeetinginfo();
             int rowsaffected=0;
-            String insertstatement="INSERT INTO health_data VALUES (?, ?, ?, ?,?)";
+            String insertstatement="INSERT INTO meeting_information VALUES (?, ?, ?,?)";
 
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             for (int i=0;i<datatoinsert.size();i++)
             {
 
-                user_health_info insert_health_info=datatoinsert.get(i);
+                telehealth_record insert_meeting_info=datatoinsert.get(i);
                 //set insert values
-                preparedStatement.setString(1,user.getusername());
-                preparedStatement.setString(2,insert_health_info.getsleepcycle());
-                preparedStatement.setFloat(3,insert_health_info.getheartRate());
-                preparedStatement.setInt(4,insert_health_info.getstepcount());
-                preparedStatement.setDate(5,insert_health_info.getdate());
+                //preparedStatement.setString(1,user.getname());
+                preparedStatement.setString(1,insert_meeting_info.getuser().getname());
+                preparedStatement.setString(2,insert_meeting_info.getuser().getdrname());
+                preparedStatement.setString(3,insert_meeting_info.getmeetinglink());
+                preparedStatement.setDate(4,insert_meeting_info.getdate());
                 rowsaffected += preparedStatement.executeUpdate();
 
             }
@@ -81,22 +81,24 @@ public class telehealth_handling implements database_handling{
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String retrievestatement="Select * from meeting_information where patient = ?";
+            String retrievestatement="Select * from meeting_information where patient=?";
             PreparedStatement preparedStatement = connection.prepareStatement(retrievestatement);
             //insert values to be entered
             preparedStatement.setString(1,patient);
            
             ResultSet resultSet = preparedStatement.executeQuery();
             // ... process the data
-
              while (resultSet.next()) 
              {
                 String patient_name = resultSet.getString("patient");
+                System.out.println(patient_name);
                 usersdb usersdb=new usersdb();
                 user patient_user=usersdb.retrieve_patient_from_db(patient_name);
+                System.out.println(patient_user.getname());
                 String doctor = resultSet.getString("doctor");
                 user doctor_user=usersdb.retrieve_doctor_from_db(doctor);
-                String meeting_link= resultSet.getString("Meeting_link");               Date date = resultSet.getDate("meeting_date");
+                String meeting_link= resultSet.getString("meeting_link");               
+                Date date = resultSet.getDate("meeting_date");
                 telehealth_record datatoinsert= new telehealth_record(patient_user,doctor_user,meeting_link,date);
                 userinfo.add(datatoinsert);
             }
@@ -107,6 +109,7 @@ public class telehealth_handling implements database_handling{
           
         }
         catch (Exception exception) {
+            //System.out.println("exception");
             System.out.println(exception);
         } //access database with credentials
         //insert list information as row

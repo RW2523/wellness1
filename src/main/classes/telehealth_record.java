@@ -45,7 +45,7 @@ public class telehealth_record
          this.user=user;
     }
 
-    public void getdoctor(user doctor)
+    public void setdoctor(user doctor)
     {
         this.doctor=doctor;
     }

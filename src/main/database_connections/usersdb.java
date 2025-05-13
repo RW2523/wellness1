@@ -36,7 +36,7 @@ public class usersdb implements database_handling
 
     
             //grant user priviledges to different roles
-            String credentialsaccess="Grant select,insert on user_info.credentials to ?@localhost";
+            String credentialsaccess="Grant select,insert on user_info.user_credentials to ?@localhost";
             PreparedStatement preparedcredentialsaccess = connection.prepareStatement(credentialsaccess);
             preparedcredentialsaccess.setString(1,user.getusername());
             //preparedStatement.setString(2,user.getpass());
@@ -96,7 +96,7 @@ public class usersdb implements database_handling
 
     
             //grant user priviledges to different roles
-            String credentialsaccess="Grant select,insert,delete on user_info.credentials to ?@localhost";
+            String credentialsaccess="Grant select,insert,delete on user_info.doctor_credentials to ?@localhost";
             PreparedStatement preparedcredentialsaccess = connection.prepareStatement(credentialsaccess);
             preparedcredentialsaccess.setString(1,user.getusername());
             //preparedStatement.setString(2,user.getpass());
@@ -240,7 +240,7 @@ public class usersdb implements database_handling
                 "test", "test");
                 //db is user infor->stores credentials and health info
             //create statement
-            String insertstatement="Select * from user_credentials where username = ?";
+            String insertstatement="Select * from user_credentials where name = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
             preparedStatement.setString(1,user);
@@ -293,7 +293,7 @@ public class usersdb implements database_handling
                 "test", "test");
                 //db is user infor->stores credentials and health info
             //create statement
-            String insertstatement="Select * from doctor_credentials where username = ?";
+            String insertstatement="Select * from doctor_credentials where name = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
             //insert values to be entered
             preparedStatement.setString(1,doctor);
