@@ -1,13 +1,14 @@
 package main;
 
 
+import java.nio.FloatBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.sql.Date;
 import java.util.List;
-import java.util.Date;
 
 public class health_information implements database_handling{
 //adds input data to the health database and gets it for the user
@@ -24,22 +25,32 @@ public class health_information implements database_handling{
             connection = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/user_info",
                 "test", "test");
-                //db is user infor->stores credentials and health info
+                //db is user info->stores credentials and health info
     
             //create statement
-            String insertstatement="INSERT INTO credentials VALUES (?, ?, ?, ?)";
+            List<user_health_info> datatoinsert=user.gethealthinfolist();
+            int rowsaffected=0;
+            String insertstatement="INSERT INTO health_data VALUES (?, ?, ?, ?,?)";
+
             PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
-            //insert values to be entered
-            preparedStatement.setString(1,user.getusername());
-            preparedStatement.setString(2,user.getpass());
-            preparedStatement.setString(3,user.getemail());
-            preparedStatement.setString(4,user.getrole());
-            int rowsAffected = preparedStatement.executeUpdate();
+            for (int i=0;i<datatoinsert.size();i++)
+            {
+
+                user_health_info insert_health_info=datatoinsert.get(i);
+                //set insert values
+                preparedStatement.setString(1,user.getusername());
+                preparedStatement.setString(2,insert_health_info.getsleepcycle());
+                preparedStatement.setFloat(3,insert_health_info.getheartRate());
+                preparedStatement.setInt(4,insert_health_info.getstepcount());
+                preparedStatement.setDate(5,insert_health_info.getdate());
+                rowsaffected += preparedStatement.executeUpdate();
+
+            }
             
             
             preparedStatement.close();
             connection.close();
-             if (rowsAffected>0)
+             if (rowsaffected>0)
             {
                 return true;
             
@@ -51,15 +62,13 @@ public class health_information implements database_handling{
         //insert list information as row
         //return true if successful
         return false;
-        
-
     }
   
     @Override
-    public List retrieve_from_db(String user) 
+    public List<user_health_info> retrieve_from_db(String user) 
     {
         Connection connection = null;
-        List<String>userinfo=new ArrayList<>();
+        List<user_health_info>userinfo=new ArrayList<>();
 
         try {
             // below two lines are used for connectivity.
@@ -70,8 +79,8 @@ public class health_information implements database_handling{
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String insertstatement="Select * from credentials where username = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(insertstatement);
+            String retrievestatement="Select * from credentials where username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(retrievestatement);
             //insert values to be entered
             preparedStatement.setString(1,user);
            
@@ -80,16 +89,15 @@ public class health_information implements database_handling{
 
              while (resultSet.next()) 
              {
+                
                 String username = resultSet.getString("username");
-                String password = resultSet.getString("password");
-                String email = resultSet.getString("email");
-                String role = resultSet.getString("role");
-                userinfo.add(username);
-                userinfo.add(password);
-                userinfo.add(email);
-                userinfo.add(role);
-
-
+                String sleepcycle = resultSet.getString("sleepcycle");
+                Float heartRate= resultSet.getFloat("HeartRate");
+                int stepcount = resultSet.getInt("stepcount");
+                Date date = resultSet.getDate("date_entered");
+                user_health_info datatoinsert= new user_health_info(sleepcycle,heartRate,stepcount,date);
+         
+                userinfo.add(datatoinsert);
             }
             resultSet.close();
             preparedStatement.close();
@@ -103,10 +111,6 @@ public class health_information implements database_handling{
         //insert list information as row
         //return true if successful
         return userinfo;
-
-
-
-
 
 }
 }

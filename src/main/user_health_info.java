@@ -1,7 +1,8 @@
 package main;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
+import java.sql.Date;
+
 public class user_health_info 
 {
     //schema:username foreign key, 
