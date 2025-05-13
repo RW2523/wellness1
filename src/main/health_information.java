@@ -79,7 +79,7 @@ public class health_information implements database_handling{
                 //db is user infor->stores credentials and health info
     
             //create statement
-            String retrievestatement="Select * from credentials where username = ?";
+            String retrievestatement="Select * from health_data where username = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(retrievestatement);
             //insert values to be entered
             preparedStatement.setString(1,user);
