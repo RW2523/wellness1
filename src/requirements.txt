@@ -1,0 +1,5 @@
+set up a MySQL connection-need MySQL installed
+need mysqlconnector jar in lib
+create user test and grant is all access
+create database user_info
+create tables user_credentials, doctor_credentials, health_data, and meeting_information

@@ -7,6 +7,7 @@ credentials->user_credentials
 ,doctorname string
 -doctor is foreign key with doctor_credentials
 -name is primary key
+
 create table user_credentials (name varchar(255) not null,username varchar (255) not null primary key, password varchar(255) not null, email varchar(255) not null, doctorname varchar(255));
 create index before creating foreign key
 alter table user_credentials add index username_index (username);
