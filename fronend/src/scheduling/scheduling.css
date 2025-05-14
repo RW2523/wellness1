@@ -1,0 +1,34 @@
+.schedule-page {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: sans-serif;
+}
+
+.date-picker,
+.time-slot-selector {
+  margin: 1rem 0;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5rem;
+}
+
+.slot {
+  padding: 0.5rem;
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.slot.selected {
+  background-color: #4caf50;
+  color: white;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

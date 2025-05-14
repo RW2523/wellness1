@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // <-- NEW
 
 const doctorsList = [
   {
@@ -35,8 +36,7 @@ const doctorsList = [
 
 function ConsultPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDoctor, setSelectedDoctor] = useState(null);
-  const [bookingMessage, setBookingMessage] = useState('');
+  const navigate = useNavigate(); // <-- NEW
 
   const filteredDoctors = doctorsList.filter(
     (doc) =>
@@ -45,13 +45,7 @@ function ConsultPage() {
   );
 
   const handleBook = (doctor) => {
-    setSelectedDoctor(doctor);
-    setBookingMessage('');
-  };
-
-  const confirmBooking = () => {
-    setBookingMessage(`Appointment booked with ${selectedDoctor.name}. Confirmation will be sent to ${selectedDoctor.contact}.`);
-    setSelectedDoctor(null);
+    navigate(`/schedule/${doctor.id}`); // <-- Redirect to SchedulePage
   };
 
   return (
@@ -78,26 +72,6 @@ function ConsultPage() {
           </div>
         ))}
       </div>
-
-      {/* Booking Modal */}
-      {selectedDoctor && (
-        <div style={styles.modalOverlay}>
-          <div style={styles.modal}>
-            <h3>Confirm Booking</h3>
-            <p>Doctor: <strong>{selectedDoctor.name}</strong></p>
-            <p>Specialization: {selectedDoctor.specialization}</p>
-            <p>Hospital: {selectedDoctor.hospital}</p>
-            <button onClick={confirmBooking} style={styles.confirmButton}>Confirm</button>
-            <button onClick={() => setSelectedDoctor(null)} style={styles.cancelButton}>Cancel</button>
-          </div>
-        </div>
-      )}
-
-      {bookingMessage && (
-        <div style={styles.successBox}>
-          ✅ {bookingMessage}
-        </div>
-      )}
     </div>
   );
 }
@@ -149,45 +123,6 @@ const styles = {
     border: 'none',
     borderRadius: '6px',
     cursor: 'pointer'
-  },
-  modalOverlay: {
-    position: 'fixed',
-    top: 0, left: 0, right: 0, bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  modal: {
-    background: '#fff',
-    padding: '2rem',
-    borderRadius: '10px',
-    textAlign: 'center',
-    width: '300px'
-  },
-  confirmButton: {
-    backgroundColor: '#28a745',
-    color: '#fff',
-    padding: '0.6rem 1rem',
-    marginRight: '1rem',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  },
-  cancelButton: {
-    backgroundColor: '#dc3545',
-    color: '#fff',
-    padding: '0.6rem 1rem',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  },
-  successBox: {
-    marginTop: '2rem',
-    padding: '1rem',
-    backgroundColor: '#d4edda',
-    color: '#155724',
-    borderLeft: '5px solid #28a745'
   }
 };
 

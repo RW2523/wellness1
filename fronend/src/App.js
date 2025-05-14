@@ -8,7 +8,7 @@ import ProfilePage from './components/Profile';
 import ZenMode from './components/ZenMode';
 import ConsultPage from './components/ConsultPage';
 import Meal from './components/Meal';
-
+import SchedulePage from './scheduling/SchedulePage';
 
 function App() {
   return (
@@ -22,6 +22,7 @@ function App() {
         <Route path="/zen" element={<ZenMode />} />
         <Route path="/consult" element={<ConsultPage />} />
         <Route path="/meal" element={<Meal />} />
+        <Route path="/schedule/:consultantId" element={<SchedulePage />} />
       </Routes>
     </Router>
   );
